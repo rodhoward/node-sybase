@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "A simple node.js wrapper around a java/jconnect app that provides easy access to Sybase Databases without having to install odbc or freetds.",
   "dependencies": {
-    "lodash": "latest",
     "JSONStream" : "latest"
   },    
   "scripts" : {
