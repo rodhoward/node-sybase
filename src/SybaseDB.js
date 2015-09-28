@@ -65,7 +65,7 @@ SybaseDB.prototype.isConnected = function()
     return this.connected;
 };
 
-SybaseDB.prototype.executeSql = function(sql, callback) 
+SybaseDB.prototype.query = function(sql, callback) 
 {
     if (this.isConnected === false)
     {
@@ -129,7 +129,7 @@ db.connect(function(err1)
 		return;
 	}
 	
-	db.executeSql("select top 20 name, screen_alias from accounts", function(err2, data) {
+	db.query("select top 20 name, screen_alias from accounts", function(err2, data) {
 		if (err2 != null)
 		{
 			console.log("Error2 : " + err2);
