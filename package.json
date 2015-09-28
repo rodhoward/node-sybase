@@ -6,8 +6,9 @@
     "JSONStream" : "latest"
   },    
   "scripts" : {
-  	"test": "echo "Error: no test specified" && exit 1"
+  	"test": "echo \"Error: no test specified\" && exit 1"
   },
+  "homepage": "http://github.com/rodhoward/node-sybase/",
   "repository": {
     "type": "git",
     "url": "git://github.com/rodhoward/node-sybase.git"
