@@ -3,7 +3,7 @@ var JSONStream = require('JSONStream');
 
 var PATH_TO_JAVA_BRIDGE = "./JavaSybaseLink/dist/JavaSybaseLink.jar";
 
-function SybaseDB(host, port, dbname, username, password, logTiming, pathToJavaBridge)
+function Sybase(host, port, dbname, username, password, logTiming, pathToJavaBridge)
 {
     this.connected = false;
     this.host = host;
@@ -23,7 +23,7 @@ function SybaseDB(host, port, dbname, username, password, logTiming, pathToJavaB
     this.jsonParser = JSONStream.parse();
 }
 
-SybaseDB.prototype.connect = function(callback)
+Sybase.prototype.connect = function(callback)
 {
     var that = this;
     this.javaDB = spawn('java',["-jar",this.pathToJavaBridge, this.host, this.port, this.dbname, this.username, this.password]);
@@ -54,18 +54,18 @@ SybaseDB.prototype.connect = function(callback)
     });   
 };
 
-SybaseDB.prototype.disconnect = function()
+Sybase.prototype.disconnect = function()
 {
 	this.javaDB.kill();
 	this.connected = false;	
 }
 
-SybaseDB.prototype.isConnected = function() 
+Sybase.prototype.isConnected = function() 
 {
     return this.connected;
 };
 
-SybaseDB.prototype.query = function(sql, callback) 
+Sybase.prototype.query = function(sql, callback) 
 {
     if (this.isConnected === false)
     {
@@ -88,7 +88,7 @@ SybaseDB.prototype.query = function(sql, callback)
     this.javaDB.stdin.write(strMsg + "\n");
 };
 
-SybaseDB.prototype.onSQLResonse = function(jsonMsg)
+Sybase.prototype.onSQLResonse = function(jsonMsg)
 {
 	var request = this.currentMessages[jsonMsg.msgId];
 	delete this.currentMessages[jsonMsg.msgId];
@@ -107,7 +107,7 @@ SybaseDB.prototype.onSQLResonse = function(jsonMsg)
 	request.callback(null, result);
 };
 
-SybaseDB.prototype.onSQLError = function(data)
+Sybase.prototype.onSQLError = function(data)
 {
 	var error = new Error(data);
 	for (var k in this.currentMessages){
@@ -117,10 +117,10 @@ SybaseDB.prototype.onSQLError = function(data)
 	}
 };
 
-module.exports = SybaseDB;
+module.exports = Sybase;
 
 /*
-var db = new SybaseDB('host', port, 'dbName', 'username', '', true);
+var db = new Sybase('host', port, 'dbName', 'username', '', true);
 db.connect(function(err1) 
 {
 	if (err1 != null)
