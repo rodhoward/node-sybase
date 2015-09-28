@@ -1,0 +1,10 @@
+{
+  "name": "SybaseDB",
+  "version": "1.0.0",
+  "dependencies": {
+    "lodash": "latest",
+    "JSONStream" : "latest"
+  },    
+  "scripts" : {        
+  }
+}
