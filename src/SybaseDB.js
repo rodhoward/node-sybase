@@ -4,7 +4,7 @@ var fs = require("fs");
 
 //FIXME: this is bad should be a way to expose this jar file in the npm package 
 //so that it can be called properly from parent packages.
-var PATH_TO_JAVA_BRIDGE1 = process.env.PWD + "node_modules/sybase/JavaSybaseLink/dist/JavaSybaseLink.jar";
+var PATH_TO_JAVA_BRIDGE1 = process.env.PWD + "/node_modules/sybase/JavaSybaseLink/dist/JavaSybaseLink.jar";
 var PATH_TO_JAVA_BRIDGE2 = "./JavaSybaseLink/dist/JavaSybaseLink.jar";
 
 function Sybase(host, port, dbname, username, password, logTiming, pathToJavaBridge)
