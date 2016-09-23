@@ -85,18 +85,17 @@ public class ExecSQLCallable implements Callable<String> {
 				isRS = stmt.getMoreResults();
 			}
 			stmt.close();
-			response.put("javaStartTime", request.javaStartTime);
-			long beforeParse = System.currentTimeMillis();
-			response.put("javaEndTime", beforeParse);
-
-			String jsonResult = response.toJSONString();
-			//System.err.println("parse time: " + (System.currentTimeMillis() - beforeParse));
-			return jsonResult;
-
 		} catch (Exception ex) {
-			System.err.println(ex);
+			response.put("error", ex.getMessage());
 		}
-		return "";
+
+		response.put("javaStartTime", request.javaStartTime);
+		long beforeParse = System.currentTimeMillis();
+		response.put("javaEndTime", beforeParse);
+
+		String jsonResult = response.toJSONString();
+		//System.err.println("parse time: " + (System.currentTimeMillis() - beforeParse));
+		return jsonResult;
 	}
 
 	public void safePrintln(String s) {

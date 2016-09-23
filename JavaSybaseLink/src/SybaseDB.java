@@ -47,11 +47,7 @@ public class SybaseDB {
 		try {
 
 			SybDriver sybDriver = (SybDriver) Class.forName("com.sybase.jdbc3.jdbc.SybDriver").newInstance();
-			conn = DriverManager.getConnection("jdbc:sybase:Tds:" + host + ":" + port + "/" + dbname, username, password);
-			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("sp_helpdb");
-			rs.next();
-			stmt.close();
+			conn = DriverManager.getConnection("jdbc:sybase:Tds:" + host + ":" + port + "/" + dbname, username, password);			
 			return true;
 
 		} catch (Exception ex) {

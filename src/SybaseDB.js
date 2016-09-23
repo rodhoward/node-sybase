@@ -40,7 +40,7 @@ Sybase.prototype.connect = function(callback)
 		that.connected = true;
 
 		// set up normal listeners.		
-		that.javaDB.stdout.pipe(that.jsonParser).on("data", function(jsonMsg) { that.onSQLResonse.call(that, jsonMsg); });
+		that.javaDB.stdout.pipe(that.jsonParser).on("data", function(jsonMsg) { that.onSQLResponse.call(that, jsonMsg); });
 		that.javaDB.stderr.on("data", function(err) { that.onSQLError.call(that, err); });
 
 		callback(null, data);
@@ -82,14 +82,18 @@ Sybase.prototype.query = function(sql, callback)
     var strMsg = JSON.stringify(msg).replace(/[\n]/g, '\\n');
     msg.callback = callback;
     msg.hrstart = hrstart;
+
+    console.log("this: " + this + " currentMessages: " +  this.currentMessages + " this.queryCount: " + this.queryCount);
     
     this.currentMessages[msg.msgId] = msg;
 
     this.javaDB.stdin.write(strMsg + "\n");
+    console.log("sql request written: " + strMsg);
 };
 
-Sybase.prototype.onSQLResonse = function(jsonMsg)
+Sybase.prototype.onSQLResponse = function(jsonMsg)
 {
+    var err = null;
 	var request = this.currentMessages[jsonMsg.msgId];
 	delete this.currentMessages[jsonMsg.msgId];
 
@@ -102,9 +106,13 @@ Sybase.prototype.onSQLResonse = function(jsonMsg)
 	hrend = process.hrtime(request.hrstart);
 	var javaDuration = (jsonMsg.javaEndTime - jsonMsg.javaStartTime);
 
+    if (jsonMsg.error !== undefined)
+        err = new Error(jsonMsg.error);
+
+
 	if (this.logTiming)
 		console.log("Execution time (hr): %ds %dms dbTime: %dms dbSendTime: %d sql=%s", hrend[0], hrend[1]/1000000, javaDuration, sendTimeMS, request.sql);
-	request.callback(null, result);
+	request.callback(err, result);
 };
 
 Sybase.prototype.onSQLError = function(data)
@@ -118,26 +126,3 @@ Sybase.prototype.onSQLError = function(data)
 };
 
 module.exports = Sybase;
-
-/*
-var db = new Sybase('host', port, 'dbName', 'username', '', true);
-db.connect(function(err1) 
-{
-	if (err1 != null)
-	{
-		console.log(err1);
-		return;
-	}
-	
-	db.query("select top 20 name, screen_alias from accounts", function(err2, data) {
-		if (err2 != null)
-		{
-			console.log("Error2 : " + err2);
-			return;
-		}
-		
-		console.log("data: " + JSON.stringify(data));
-		db.disconnect();		
-	});	
-});
-*/
