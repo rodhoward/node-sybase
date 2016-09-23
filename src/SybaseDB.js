@@ -127,11 +127,19 @@ Sybase.prototype.onSQLResponse = function(jsonMsg)
 Sybase.prototype.onSQLError = function(data)
 {
 	var error = new Error(data);
+
+    var callBackFuncitons = [];
 	for (var k in this.currentMessages){
-    	if (this.currentMessages.hasOwnProperty(k)) {
-    		this.currentMessages[k].callback(error);
+    	if (this.currentMessages.hasOwnProperty(k)) { 		
+            callBackFuncitons.push(this.currentMessages[k].callback);
     	}
 	}
+
+    // clear the current messages before calling back with the error.
+    this.currentMessages = [];
+    callBackFuncitons.forEach(function(cb) {
+        cb(error);
+    });
 };
 
 module.exports = Sybase;
