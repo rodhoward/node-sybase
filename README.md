@@ -1,7 +1,7 @@
 node-sybase
 ---------
 
-A simple node.js wrapper around a Java application that provides easy access to Sybase databases via jconn3. The main goal is to allow easy installation without the requirements of installing and configuing odbc or freetds. You do however have to have java 1.5 or newer installed.
+A simple node.js wrapper around a Java application that provides easy access to Sybase databases via jconn3. The main goal is to allow easy installation without the requirements of installing and configuring odbc or freetds. You do however have to have java 1.5 or newer installed.
 
 requirements
 ------------
@@ -48,7 +48,7 @@ db.connect(function (err) {
 api
 -------------
 
-The api is super simple. It makes use of standard node callbacks so that it can be easily used with promises. The only thing not covered in the example above is the option to print some timing stats to the console as well as to specify the locaiton of the Java application bridge, which shouldn't need to change.
+The api is super simple. It makes use of standard node callbacks so that it can be easily used with promises. The only thing not covered in the example above is the option to print some timing stats to the console as well as to specify the location of the Java application bridge, which shouldn't need to change.
 
 ```javascirpt 
 var logTiming = true,

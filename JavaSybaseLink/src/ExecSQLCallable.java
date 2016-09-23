@@ -46,7 +46,11 @@ public class ExecSQLCallable implements Callable<String> {
 			boolean isRS = stmt.execute(request.sql);
 			while (isRS || (stmt.getUpdateCount() != -1))
 			{
-				if (!isRS) continue;
+				if (!isRS)
+                                {
+                                    isRS = stmt.getMoreResults();
+                                    continue;
+                                }
 				ResultSet rs = stmt.getResultSet();
 				ResultSetMetaData meta = rs.getMetaData();
 
