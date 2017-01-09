@@ -55,3 +55,8 @@ var logTiming = true,
 	javaJarPath = './JavaSybaseLink/dist/JavaSybaseLink.jar',
 	db = new Sybase('host', port, 'dbName', 'username', 'pw', logTiming, javaJarPath);
 ```
+
+The java Bridge now optionally looks for a "sybaseConfig.properties" file in which you can configure jconnect properties to be included in the connection. This should allow setting properties like:
+```properties
+ENCRYPT_PASSWORD=true
+```

@@ -42,7 +42,7 @@ public class Main implements SQLRequestListener {
 		input = new StdInputReader();
 		input.addListener(this);
 
-		MyProperties props = new MyProperties("config.properties");
+		MyProperties props = new MyProperties("sybaseConfig.properties");
 		db = new SybaseDB(host, port, dbname, username, password, props.properties);
 		if (!db.connect())
 			System.exit(1);
