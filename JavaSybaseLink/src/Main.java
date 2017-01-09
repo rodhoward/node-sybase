@@ -28,7 +28,7 @@ public class Main implements SQLRequestListener {
 		}
 		if (args.length == 5)
 			pw = args[4];
-		
+
 		m = new Main(args[0], Integer.parseInt(args[1]), args[2], args[3], pw);
     }
 
@@ -41,7 +41,9 @@ public class Main implements SQLRequestListener {
 
 		input = new StdInputReader();
 		input.addListener(this);
-		db = new SybaseDB(host, port, dbname, username, password);
+
+		MyProperties props = new MyProperties("config.properties");
+		db = new SybaseDB(host, port, dbname, username, password, props.properties);
 		if (!db.connect())
 			System.exit(1);
 

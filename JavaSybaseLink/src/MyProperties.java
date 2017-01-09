@@ -19,7 +19,7 @@ public class MyProperties {
 			in.close();
 		}
 		catch(Exception e) {
-			System.err.println(e);
+			//System.err.println(e);
 		}
 	}
 
