@@ -53,6 +53,68 @@ describe("Node Sybase Bridge", function() {
 
 	});
 
+	it('Should work with updates', function(done) {
+		
+		if (!subject.isConnected()) {
+			expect(connectError).to.equal(null);
+			done();
+			return;	
+		}
+
+		var pquery = P.promisify(subject.query, {context: subject});
+		pquery("update accounts set email = 'newemail@gmail.com' where name = 'testuser17'").then(function(results){
+			
+			console.log('updates returned: ' + JSON.stringify(results));
+			console.dir(results);
+
+			done();
+		}).catch((err)=>{
+			done(err);
+		});		
+	});
+
+	it('Should work with inserts', function(done) {
+		
+		if (!subject.isConnected()) {
+			expect(connectError).to.equal(null);
+			done();
+			return;	
+		}
+
+		var pquery = P.promisify(subject.query, {context: subject});
+		pquery("select top 2 * from app_log\ninsert into app_log (target, date, lvel, message) values ('testing', getdate(), 'ERROR', 'msg')\ninsert into app_log (target, date, lvel, message) values ('testing2', getdate(), 'ERROR', 'msg')\nselect top 2 * from app_log").then(function(results){
+			
+			console.log('inserts returned: ' + JSON.stringify(results));
+			console.dir(results);
+
+			done();
+		}).catch((err)=>{
+			done(err);
+		});		
+	});
+
+	it('Should work with stored procedres', function(done) {
+		
+		if (!subject.isConnected()) {
+			expect(connectError).to.equal(null);
+			done();
+			return;	
+		}
+
+		var pquery = P.promisify(subject.query, {context: subject});
+		pquery("exec e_addtip 4142, 1, 44").then(function(results){
+			
+			console.log('inserts returned: ' + JSON.stringify(results));
+			console.dir(results);
+
+			done();
+		}).catch((err)=>{
+			done(err);
+		});		
+	});
+
+	
+
 	it("Multiple async Calls (batch)", function(done) {
 		
 		if (!subject.isConnected()) {
