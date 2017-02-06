@@ -102,7 +102,7 @@ describe("Node Sybase Bridge", function() {
 		}
 
 		var pquery = P.promisify(subject.query, {context: subject});
-		pquery("exec e_addtip 4142, 1, 44").then(function(results){
+		pquery("exec sp_test").then(function(results){
 			
 			console.log('inserts returned: ' + JSON.stringify(results));
 			console.dir(results);
@@ -112,9 +112,7 @@ describe("Node Sybase Bridge", function() {
 			done(err);
 		});		
 	});
-
 	
-
 	it("Multiple async Calls (batch)", function(done) {
 		
 		if (!subject.isConnected()) {
