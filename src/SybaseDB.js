@@ -7,7 +7,7 @@ var fs = require("fs");
 var PATH_TO_JAVA_BRIDGE1 = process.env.PWD + "/node_modules/sybase/JavaSybaseLink/dist/JavaSybaseLink.jar";
 var PATH_TO_JAVA_BRIDGE2 = "./JavaSybaseLink/dist/JavaSybaseLink.jar";
 
-function Sybase(host, port, dbname, username, password, logTiming, pathToJavaBridge)
+function Sybase(host, port, dbname, username, password, logTiming, pathToJavaBridge, dbCharset)
 {
     this.connected = false;
     this.host = host;
@@ -16,6 +16,7 @@ function Sybase(host, port, dbname, username, password, logTiming, pathToJavaBri
     this.username = username;
     this.password = password;    
     this.logTiming = (logTiming == true);
+	this.dbCharset = dbCharset || 'utf8';
     
     this.pathToJavaBridge = pathToJavaBridge;
     if (this.pathToJavaBridge === undefined)
@@ -49,7 +50,7 @@ Sybase.prototype.connect = function(callback)
 		that.connected = true;
 
 		// set up normal listeners.		
-		that.javaDB.stdout.setEncoding('utf8').pipe(that.jsonParser).on("data", function(jsonMsg) { that.onSQLResponse.call(that, jsonMsg); });
+		that.javaDB.stdout.setEncoding(that.dbCharset).pipe(that.jsonParser).on("data", function(jsonMsg) { that.onSQLResponse.call(that, jsonMsg); });
 		that.javaDB.stderr.on("data", function(err) { that.onSQLError.call(that, err); });
 
 		callback(null, data);
