@@ -7,7 +7,7 @@ var fs = require("fs");
 var PATH_TO_JAVA_BRIDGE1 = process.env.PWD + "/node_modules/sybase/JavaSybaseLink/dist/JavaSybaseLink.jar";
 var PATH_TO_JAVA_BRIDGE2 = "./JavaSybaseLink/dist/JavaSybaseLink.jar";
 
-function Sybase(host, port, dbname, username, password, logTiming, pathToJavaBridge)
+function Sybase(host, port, dbname, username, password, options)
 {
     this.connected = false;
     this.host = host;
@@ -15,9 +15,14 @@ function Sybase(host, port, dbname, username, password, logTiming, pathToJavaBri
     this.dbname = dbname;
     this.username = username;
     this.password = password;    
-    this.logTiming = (logTiming == true);
-    
-    this.pathToJavaBridge = pathToJavaBridge;
+
+    if (!options){
+        options = {};
+    }
+    this.logTiming = (options.logTiming == true);
+    this.pathToJavaBridge = options.pathToJavaBridge;
+    this.debug = options.debug;
+
     if (this.pathToJavaBridge === undefined)
     {
     	if (fs.existsSync(PATH_TO_JAVA_BRIDGE1))
@@ -92,12 +97,16 @@ Sybase.prototype.query = function(sql, callback)
     msg.callback = callback;
     msg.hrstart = hrstart;
 
-    console.log("this: " + this + " currentMessages: " +  this.currentMessages + " this.queryCount: " + this.queryCount);
-    
+    if (this.debug){
+        //Is this really necesary? Maybe enable another debug option 
+        //console.info("this: " + this + " currentMessages: " +  this.currentMessages + " this.queryCount: " + this.queryCount);
+    }
     this.currentMessages[msg.msgId] = msg;
 
     this.javaDB.stdin.write(strMsg + "\n");
-    console.log("sql request written: " + strMsg);
+    if (this.debug){
+        console.info("sql request written: " + strMsg);
+    }  
 };
 
 Sybase.prototype.onSQLResponse = function(jsonMsg)
