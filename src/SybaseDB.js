@@ -7,7 +7,7 @@ var fs = require("fs");
 var PATH_TO_JAVA_BRIDGE1 = process.env.PWD + "/node_modules/sybase/JavaSybaseLink/dist/JavaSybaseLink.jar";
 var PATH_TO_JAVA_BRIDGE2 = "./JavaSybaseLink/dist/JavaSybaseLink.jar";
 
-function Sybase(host, port, dbname, username, password, logTiming, pathToJavaBridge)
+function Sybase(host, port, dbname, username, password, logTiming, pathToJavaBridge, print_debug)
 {
     this.connected = false;
     this.host = host;
@@ -15,7 +15,8 @@ function Sybase(host, port, dbname, username, password, logTiming, pathToJavaBri
     this.dbname = dbname;
     this.username = username;
     this.password = password;    
-    this.logTiming = (logTiming == true);
+	this.logTiming = (logTiming == true);
+	this.print_debug = (print_debug === true)
     
     this.pathToJavaBridge = pathToJavaBridge;
     if (this.pathToJavaBridge === undefined)
@@ -92,12 +93,17 @@ Sybase.prototype.query = function(sql, callback)
     msg.callback = callback;
     msg.hrstart = hrstart;
 
-    console.log("this: " + this + " currentMessages: " +  this.currentMessages + " this.queryCount: " + this.queryCount);
+	if(this.print_debug){
+		console.log("this: " + this + " currentMessages: " +  this.currentMessages + " this.queryCount: " + this.queryCount);
+	}
     
     this.currentMessages[msg.msgId] = msg;
 
-    this.javaDB.stdin.write(strMsg + "\n");
-    console.log("sql request written: " + strMsg);
+	this.javaDB.stdin.write(strMsg + "\n");
+	
+	if(this.print_debug){
+		console.log("sql request written: " + strMsg);
+	}
 };
 
 Sybase.prototype.onSQLResponse = function(jsonMsg)
