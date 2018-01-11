@@ -69,7 +69,10 @@ public class ExecSQLCallable implements Callable<String> {
 					for (int c = 1; c< colCount+1; c++)
 					{
 						Object val = rs.getObject(c);
-						if (val == null) continue;
+						if (val == null) {
+                                                    row.put(columns[c], null);
+                                                    continue;
+                                                }
 						
 						int dataType = meta.getColumnType(c);
 						switch (dataType)
