@@ -6,8 +6,9 @@ var fs = require("fs");
 //so that it can be called properly from parent packages.
 var PATH_TO_JAVA_BRIDGE1 = process.env.PWD + "/node_modules/sybase/JavaSybaseLink/dist/JavaSybaseLink.jar";
 var PATH_TO_JAVA_BRIDGE2 = "./JavaSybaseLink/dist/JavaSybaseLink.jar";
+//If AllaowNull is passed 'TRUE', any column's value with null will be added into JSON response as <'column_name': null> otherwise it will be ignored.
 
-function Sybase(host, port, dbname, username, password, logTiming, pathToJavaBridge)
+function Sybase(host, port, dbname, username, password, logTiming, pathToJavaBridge, allowNull)
 {
     this.connected = false;
     this.host = host;
@@ -16,9 +17,14 @@ function Sybase(host, port, dbname, username, password, logTiming, pathToJavaBri
     this.username = username;
     this.password = password;    
     this.logTiming = (logTiming == true);
+    if(allowNull === undefined) {
+        this.allowNull = false;
+    } else {
+        this.allowNull = allowNull;
+    }
     
     this.pathToJavaBridge = pathToJavaBridge;
-    if (this.pathToJavaBridge === undefined)
+    if (this.pathToJavaBridge === undefined || this.pathToJavaBridge.trim() === '')
     {
     	if (fs.existsSync(PATH_TO_JAVA_BRIDGE1))
     		this.pathToJavaBridge = PATH_TO_JAVA_BRIDGE1;
@@ -35,7 +41,7 @@ function Sybase(host, port, dbname, username, password, logTiming, pathToJavaBri
 Sybase.prototype.connect = function(callback)
 {
     var that = this;
-    this.javaDB = spawn('java',["-jar",this.pathToJavaBridge, this.host, this.port, this.dbname, this.username, this.password]);
+    this.javaDB = spawn('java',["-jar",this.pathToJavaBridge, this.host, this.port, this.dbname, this.username, this.password, this.allowNull]);
 
     var hrstart = process.hrtime();
 	this.javaDB.stdout.once("data", function(data) {
