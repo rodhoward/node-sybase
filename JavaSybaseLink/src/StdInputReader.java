@@ -15,10 +15,12 @@ public class StdInputReader {
 
 	private List<SQLRequestListener> listeners = new ArrayList<SQLRequestListener>();
 	private BufferedReader inputBuffer = new BufferedReader(new InputStreamReader(System.in));
-
-	public StdInputReader() {
-
-	}
+        private boolean allowNull = false;
+        
+	public StdInputReader(boolean allowNull)
+        {
+          this.allowNull = allowNull;
+        }
 
 	public void startReadLoop()
 	{
@@ -43,6 +45,7 @@ public class StdInputReader {
 			request.msgId = (Integer)val.get("msgId");
 			request.sql = (String)val.get("sql");
 			request.javaStartTime = startTime;
+                        request.allowNull = this.allowNull;
 		} catch (Exception e)
 		{
 			request = null;

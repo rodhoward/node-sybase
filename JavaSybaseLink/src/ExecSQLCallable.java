@@ -69,23 +69,23 @@ public class ExecSQLCallable implements Callable<String> {
 					for (int c = 1; c< colCount+1; c++)
 					{
 						Object val = rs.getObject(c);
-						if (val == null) {
+						if (val == null && request.allowNull){
                                                     row.put(columns[c], null);
                                                     continue;
-                                                }
-						
-						int dataType = meta.getColumnType(c);
-						switch (dataType)
-						{
-							case SybaseDB.TYPE_TIME_STAMP:
-							case SybaseDB.TYPE_DATE:
-								String my8601formattedDate = df.format(new Date(rs.getTimestamp(c).getTime()));
-								row.put(columns[c], my8601formattedDate);
-								break;
-							default:
-								row.put(columns[c], rs.getObject(c));
-						}
-						//System.out.println(columns[c] + ": " + dataType);
+                                                } else if (val != null) {
+                                                    int dataType = meta.getColumnType(c);
+                                                    switch (dataType)
+                                                    {
+                                                            case SybaseDB.TYPE_TIME_STAMP:
+                                                            case SybaseDB.TYPE_DATE:
+                                                                    String my8601formattedDate = df.format(new Date(rs.getTimestamp(c).getTime()));
+                                                                    row.put(columns[c], my8601formattedDate);
+                                                                    break;
+                                                            default:
+                                                                    row.put(columns[c], rs.getObject(c));
+                                                    }
+                                                    //System.out.println(columns[c] + ": " + dataType);
+                                                } else continue;
 					}
 				}
 				rs.close();
