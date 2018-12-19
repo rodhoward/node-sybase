@@ -1,5 +1,5 @@
-var spawn = require('child_process').spawn;
-var JSONStream = require('JSONStream');
+var spawn = require("child_process").spawn;
+var JSONStream = require("JSONStream");
 var fs = require("fs");
 var path = require("path");
 
@@ -28,7 +28,7 @@ function Sybase(host, port, dbname, username, password, logTiming, pathToJavaBri
 Sybase.prototype.connect = function(callback)
 {
     var that = this;
-    this.javaDB = spawn('java',["-jar",this.pathToJavaBridge, this.host, this.port, this.dbname, this.username, this.password]);
+    this.javaDB = spawn("java",["-jar",this.pathToJavaBridge, this.host, this.port, this.dbname, this.username, this.password]);
 
     var hrstart = process.hrtime();
 	this.javaDB.stdout.once("data", function(data) {
@@ -42,7 +42,7 @@ Sybase.prototype.connect = function(callback)
 		that.connected = true;
 
 		// set up normal listeners.		
-		that.javaDB.stdout.setEncoding('utf8').pipe(that.jsonParser).on("data", function(jsonMsg) { that.onSQLResponse.call(that, jsonMsg); });
+		that.javaDB.stdout.setEncoding("utf8").pipe(that.jsonParser).on("data", function(jsonMsg) { that.onSQLResponse.call(that, jsonMsg); });
 		that.javaDB.stderr.on("data", function(err) { that.onSQLError.call(that, err); });
 
 		callback(null, data);
@@ -81,7 +81,7 @@ Sybase.prototype.query = function(sql, callback)
     msg.msgId = this.queryCount;
     msg.sql = sql;
     msg.sentTime = (new Date()).getTime();
-    var strMsg = JSON.stringify(msg).replace(/[\n]/g, '\\n');
+    var strMsg = JSON.stringify(msg).replace(/[\n]/g, "\\n");
     msg.callback = callback;
     msg.hrstart = hrstart;
 
