@@ -11,7 +11,7 @@ function Sybase(host, port, dbname, username, password, logTiming, pathToJavaBri
     this.dbname = dbname;
     this.username = username;
     this.password = password;    
-    this.logTiming = (logTiming == true);
+    this.logTiming = (logTiming === true);
     
     this.pathToJavaBridge = pathToJavaBridge;
     if (this.pathToJavaBridge === undefined)
@@ -32,7 +32,7 @@ Sybase.prototype.connect = function(callback)
 
     var hrstart = process.hrtime();
 	this.javaDB.stdout.once("data", function(data) {
-		if ((data+"").trim() != "connected")
+		if ((data+"").trim() !== "connected")
 		{
 			callback(new Error("Error connecting " + data));
 			return;
