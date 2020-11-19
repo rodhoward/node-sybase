@@ -69,7 +69,7 @@ Sybase.prototype.isConnected = function()
 
 Sybase.prototype.query = function(sql, callback) 
 {
-    if (this.isConnected === false)
+    if (this.isConnected() === false)
     {
     	callback(new Error("database isn't connected."));
     	return;
