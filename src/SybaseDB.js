@@ -3,7 +3,8 @@ var JSONStream = require('JSONStream');
 var fs = require("fs");
 var path = require("path");
 
-function Sybase(host, port, dbname, username, password, logTiming, pathToJavaBridge)
+
+function Sybase(host, port, dbname, username, password, logTiming, pathToJavaBridge, { encoding = "utf8", extraLogs = false } = {})
 {
     this.connected = false;
     this.host = host;
@@ -12,6 +13,8 @@ function Sybase(host, port, dbname, username, password, logTiming, pathToJavaBri
     this.username = username;
     this.password = password;    
     this.logTiming = (logTiming == true);
+    this.encoding = encoding;
+    this.extraLogs = extraLogs;
     
     this.pathToJavaBridge = pathToJavaBridge;
     if (this.pathToJavaBridge === undefined)
@@ -23,6 +26,13 @@ function Sybase(host, port, dbname, username, password, logTiming, pathToJavaBri
     this.currentMessages = {}; // look up msgId to message sent and call back details.
 
     this.jsonParser = JSONStream.parse();
+}
+
+Sybase.prototype.log = function(msg)
+{
+    if (this.extraLogs) {
+        console.log(msg);
+    }
 }
 
 Sybase.prototype.connect = function(callback)
@@ -42,7 +52,7 @@ Sybase.prototype.connect = function(callback)
 		that.connected = true;
 
 		// set up normal listeners.		
-		that.javaDB.stdout.setEncoding('utf8').pipe(that.jsonParser).on("data", function(jsonMsg) { that.onSQLResponse.call(that, jsonMsg); });
+		that.javaDB.stdout.setEncoding(encoding).pipe(that.jsonParser).on("data", function(jsonMsg) { that.onSQLResponse.call(that, jsonMsg); });
 		that.javaDB.stderr.on("data", function(err) { that.onSQLError.call(that, err); });
 
 		callback(null, data);
@@ -85,12 +95,12 @@ Sybase.prototype.query = function(sql, callback)
     msg.callback = callback;
     msg.hrstart = hrstart;
 
-    console.log("this: " + this + " currentMessages: " +  this.currentMessages + " this.queryCount: " + this.queryCount);
+    this.log("this: " + this + " currentMessages: " +  this.currentMessages + " this.queryCount: " + this.queryCount);
     
     this.currentMessages[msg.msgId] = msg;
 
     this.javaDB.stdin.write(strMsg + "\n");
-    console.log("sql request written: " + strMsg);
+    this.log("sql request written: " + strMsg);
 };
 
 Sybase.prototype.onSQLResponse = function(jsonMsg)

@@ -15,12 +15,12 @@
     "url": "git://github.com/rodhoward/node-sybase.git"
   },
   "license": "MIT",
-  "keywords" : [
-  	"database",
-  	"sybase",
-  	"jconnect",
-  	"sql",
-  	"java"
+  "keywords": [
+    "database",
+    "sybase",
+    "jconnect",
+    "sql",
+    "java"
   ],
   "author": "Rod Howard <rod.howard@gmail.com>",
   "bugs": {
