@@ -3,7 +3,7 @@ var JSONStream = require('JSONStream');
 var fs = require("fs");
 var path = require("path");
 
-function Sybase(host, port, dbname, username, password, logTiming, pathToJavaBridge)
+function Sybase(host, port, dbname, username, password, logTiming, pathToJavaBridge, dbCharset)
 {
     this.connected = false;
     this.host = host;
@@ -12,6 +12,7 @@ function Sybase(host, port, dbname, username, password, logTiming, pathToJavaBri
     this.username = username;
     this.password = password;    
     this.logTiming = (logTiming == true);
+	this.dbCharset = dbCharset || 'utf8';
     
     this.pathToJavaBridge = pathToJavaBridge;
     if (this.pathToJavaBridge === undefined)
@@ -42,7 +43,7 @@ Sybase.prototype.connect = function(callback)
 		that.connected = true;
 
 		// set up normal listeners.		
-		that.javaDB.stdout.setEncoding('utf8').pipe(that.jsonParser).on("data", function(jsonMsg) { that.onSQLResponse.call(that, jsonMsg); });
+		that.javaDB.stdout.setEncoding(that.dbCharset).pipe(that.jsonParser).on("data", function(jsonMsg) { that.onSQLResponse.call(that, jsonMsg); });
 		that.javaDB.stderr.on("data", function(err) { that.onSQLError.call(that, err); });
 
 		callback(null, data);
