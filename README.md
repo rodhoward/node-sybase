@@ -48,9 +48,21 @@ db.connect(function (err) {
 api
 -------------
 
-The api is super simple. It makes use of standard node callbacks so that it can be easily used with promises. The only thing not covered in the example above is the option to print some timing stats to the console as well as to specify the location of the Java application bridge, which shouldn't need to change.
+The api is super simple. It makes use of standard node callbacks so that it can be easily used with promises. here is the full list of arguments:
 
-```javascirpt 
+```
+new Sybase(host: string, port: int, dbName: string, username: string, password: string, logTiming?: boolean, javaJarPath?: string, options?: SybaseOptions)
+```
+Where the SybaseOptions interface includes:
+```
+SybaseOptions {
+  encoding: string, // defaults to "utf8"
+  extraLogs: boolean // defaults to false
+}
+```
+
+There is an example manually setting the java jar path:
+```javascript 
 var logTiming = true,
 	javaJarPath = './JavaSybaseLink/dist/JavaSybaseLink.jar',
 	db = new Sybase('host', port, 'dbName', 'username', 'pw', logTiming, javaJarPath);
