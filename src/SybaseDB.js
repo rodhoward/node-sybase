@@ -131,16 +131,16 @@ Sybase.prototype.onSQLError = function(data)
 {
 	var error = new Error(data);
 
-    var callBackFuncitons = [];
+    var callbackFunctions = [];
 	for (var k in this.currentMessages){
     	if (this.currentMessages.hasOwnProperty(k)) { 		
-            callBackFuncitons.push(this.currentMessages[k].callback);
+            callbackFunctions.push(this.currentMessages[k].callback);
     	}
 	}
 
     // clear the current messages before calling back with the error.
     this.currentMessages = [];
-    callBackFuncitons.forEach(function(cb) {
+    callbackFunctions.forEach(function(cb) {
         cb(error);
     });
 };
